@@ -1,0 +1,31 @@
+
+> talentledger-gh@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by process 11928, using available port 3001 instead.
+▲ Next.js 16.3.4 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://172.18.0.1:3001
+- Environments: .env.local
+✓ Ready in 581ms
+⚠ Warning: Next.js ignored package-lock.json in C:\Users\HP ZBook Power G7 because it would include your home directory (C:\Users\HP ZBook Power G7).
+ To use this directory, set `turbopack.root` in your Next.js config.
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\HP ZBook Power G7\Desktop\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\HP ZBook Power G7\Desktop\ceejay\talentledger-gh\package-lock.json
+
+✓ Running next.config.mjs took 22ms
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          11928
+- Dir:          C:\Users\HP ZBook Power G7\Desktop\ceejay\talentledger-gh
+- Log:          .next\dev\logs\next-development.log
+
+You can access the existing server at http://localhost:3000,
+or run taskkill /PID 11928 /F to stop it and start a new one.
+[?25h
