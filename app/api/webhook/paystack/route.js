@@ -1,12 +1,13 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { getPaystackSecretKey } from "@/lib/paystack";
 
 export async function POST(request) {
   try {
-    const secretKey = process.env.PAYSTACK_SECRET_KEY;
+    const secretKey = getPaystackSecretKey();
 
-    if (!secretKey || secretKey === "your-paystack-secret-key") {
+    if (!secretKey) {
       return NextResponse.json(
         { error: "Paystack is not configured." },
         { status: 503 }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { getPaystackSecretKey } from "@/lib/paystack";
 
 export async function POST(request) {
   try {
@@ -26,9 +27,9 @@ export async function POST(request) {
       );
     }
 
-    const secretKey = process.env.PAYSTACK_SECRET_KEY;
+    const secretKey = getPaystackSecretKey();
 
-    if (!secretKey || secretKey === "your-paystack-secret-key") {
+    if (!secretKey) {
       const { data: updated } = await supabaseAdmin
         .from("contestants")
         .update({ payment_status: "paid" })

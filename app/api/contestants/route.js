@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 function isAuthorized(request) {
   const adminPassword = process.env.ADMIN_PASSWORD;
-  if (!adminPassword) return true;
+  if (!adminPassword) return false;
   return request.headers.get("x-admin-password") === adminPassword;
 }
 

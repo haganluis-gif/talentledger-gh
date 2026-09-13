@@ -31,7 +31,7 @@ export default function Home() {
     if (rejectedFiles.length > 0) {
       const rejected = rejectedFiles[0];
       if (rejected.file.size > MAX_MEDIA_SIZE) {
-        setErrors(["File must be 50MB or smaller."]);
+        setErrors(["File must be 4MB or smaller."]);
       } else {
         setErrors([
           `Invalid file type. Allowed: ${MEDIA_EXTENSIONS.join(", ")}`,
@@ -194,7 +194,7 @@ export default function Home() {
                     Drag & drop your clip here, or tap to browse
                   </p>
                   <p className="text-sm text-gray-400 mt-1">
-                    MP4, MOV, AVI, WebM, MP3, WAV (max 50MB)
+                    MP4, MOV, AVI, WebM, MP3, WAV (max 4MB)
                   </p>
                 </div>
               )}
