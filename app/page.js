@@ -117,15 +117,15 @@ export default function Home() {
     <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden">
       <VideoBackground />
 
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-extrabold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent drop-shadow-sm">
+      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl p-4 sm:p-8">
+        <div className="text-center mb-4 sm:mb-8">
+          <h1 className="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent drop-shadow-sm">
             ⭐ The Next Gospel Star ⭐
           </h1>
-          <p className="text-gray-500 mt-2">Contestant Registration</p>
+          <p className="text-gray-500 mt-1 sm:mt-2">Contestant Registration</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Full Name
@@ -136,7 +136,7 @@ export default function Home() {
               value={form.fullName}
               onChange={handleChange}
               placeholder="Enter your full name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none text-sm sm:text-base"
             />
           </div>
 
@@ -150,7 +150,7 @@ export default function Home() {
               value={form.location}
               onChange={handleChange}
               placeholder="e.g. Accra, Ghana"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none text-sm sm:text-base"
             />
           </div>
 
@@ -164,7 +164,7 @@ export default function Home() {
               value={form.phone}
               onChange={handleChange}
               placeholder="e.g. 024XXXXXXX"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none text-sm sm:text-base"
             />
           </div>
 
@@ -174,7 +174,7 @@ export default function Home() {
             </label>
             <div
               {...getRootProps()}
-              className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+              className={`border-2 border-dashed rounded-lg p-4 sm:p-6 text-center cursor-pointer transition-colors ${
                 isDragActive
                   ? "border-green-500 bg-green-50"
                   : "border-gray-300 hover:border-green-400"
@@ -204,7 +204,7 @@ export default function Home() {
           <button
             type="submit"
             disabled={uploading}
-            className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-green-600 text-white py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {uploading ? "Registering..." : "Register & Pay"}
           </button>
