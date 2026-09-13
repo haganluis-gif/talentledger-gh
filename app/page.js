@@ -117,17 +117,17 @@ export default function Home() {
     <div className="relative min-h-screen flex items-center justify-center p-4 overflow-hidden">
       <VideoBackground />
 
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl p-4 sm:p-8">
+      <div className="relative w-full max-w-lg rounded-2xl p-4 sm:p-8 bg-gradient-to-br from-slate-900/95 via-purple-950/95 to-slate-900/95 border border-amber-400/20 shadow-2xl shadow-black/60 backdrop-blur-xl">
         <div className="text-center mb-4 sm:mb-8">
-          <h1 className="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent drop-shadow-sm">
+          <h1 className="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(251,191,36,0.35)]">
             ⭐ The Next Gospel Star ⭐
           </h1>
-          <p className="text-gray-500 mt-1 sm:mt-2">Contestant Registration</p>
+          <p className="text-amber-200/80 mt-1 sm:mt-2">Contestant Registration</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-amber-200 mb-1">
               Full Name
             </label>
             <input
@@ -136,12 +136,12 @@ export default function Home() {
               value={form.fullName}
               onChange={handleChange}
               placeholder="Enter your full name"
-              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none text-sm sm:text-base"
+              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/15 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base backdrop-blur"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-amber-200 mb-1">
               Location
             </label>
             <input
@@ -150,12 +150,12 @@ export default function Home() {
               value={form.location}
               onChange={handleChange}
               placeholder="e.g. Accra, Ghana"
-              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none text-sm sm:text-base"
+              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/15 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base backdrop-blur"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-amber-200 mb-1">
               Phone Number
             </label>
             <input
@@ -164,7 +164,7 @@ export default function Home() {
               value={form.phone}
               onChange={handleChange}
               placeholder="e.g. 024XXXXXXX"
-              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none text-sm sm:text-base"
+              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/15 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base backdrop-blur"
             />
           </div>
 
@@ -176,21 +176,21 @@ export default function Home() {
               {...getRootProps()}
               className={`border-2 border-dashed rounded-lg p-4 sm:p-6 text-center cursor-pointer transition-colors ${
                 isDragActive
-                  ? "border-green-500 bg-green-50"
-                  : "border-gray-300 hover:border-green-400"
+                  ? "border-amber-400 bg-amber-400/10"
+                  : "border-amber-300/30 hover:border-amber-400"
               }`}
             >
               <input {...getInputProps()} />
               {file ? (
                 <div>
-                  <p className="text-green-600 font-medium">{file.name}</p>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-amber-300 font-medium">{file.name}</p>
+                  <p className="text-sm text-gray-400 mt-1">
                     {(file.size / (1024 * 1024)).toFixed(2)} MB
                   </p>
                 </div>
               ) : (
                 <div>
-                  <p className="text-gray-600">
+                  <p className="text-amber-100/90">
                     Drag & drop your clip here, or tap to browse
                   </p>
                   <p className="text-sm text-gray-400 mt-1">
@@ -204,15 +204,15 @@ export default function Home() {
           <button
             type="submit"
             disabled={uploading}
-            className="w-full bg-green-600 text-white py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-white py-2.5 sm:py-3 rounded-lg font-bold hover:brightness-110 shadow-lg shadow-orange-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {uploading ? "Registering..." : "Register & Pay"}
           </button>
 
           {errors.length > 0 && (
-            <div className="rounded-lg bg-red-50 border border-red-200 p-3 mt-2">
+            <div className="rounded-lg bg-red-950/70 border border-red-500/40 p-3 mt-2">
               {errors.map((error, i) => (
-                <p key={i} className="text-sm text-red-600">
+                <p key={i} className="text-sm text-red-200">
                   {error}
                 </p>
               ))}
@@ -220,7 +220,7 @@ export default function Home() {
           )}
 
           {message && (
-            <p className="text-center text-sm text-red-600 mt-2">{message}</p>
+            <p className="text-center text-sm text-red-300 mt-2">{message}</p>
           )}
         </form>
       </div>
