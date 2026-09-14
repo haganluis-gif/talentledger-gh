@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import {
@@ -72,11 +72,27 @@ export default function Home() {
     setSuccess(null);
   };
 
+  const startApplication = () => {
+    resetForm();
+    setView("form");
+  };
+
   const goHome = () => {
     resetForm();
     setView("landing");
     setActiveTab("home");
   };
+
+  useEffect(() => {
+    const onShow = (e) => {
+      if (e.persisted) {
+        setView("landing");
+        setActiveTab("home");
+      }
+    };
+    window.addEventListener("pageshow", onShow);
+    return () => window.removeEventListener("pageshow", onShow);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -177,7 +193,7 @@ export default function Home() {
             {view !== "form" && (
               <button
                 type="button"
-                onClick={() => setView("form")}
+                onClick={startApplication}
                 className="px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-white hover:brightness-110 transition-all"
               >
                 Apply Now
@@ -206,7 +222,7 @@ export default function Home() {
                   <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
                     <button
                       type="button"
-                      onClick={() => setView("form")}
+                      onClick={startApplication}
                       className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-white font-bold text-base shadow-xl shadow-orange-500/30 hover:brightness-110 hover:scale-105 transition-all"
                     >
                       Start Your Application
@@ -477,12 +493,19 @@ export default function Home() {
                 <div className="mt-7 flex flex-col gap-3">
                   <button
                     type="button"
+                    onClick={startApplication}
+                    className="w-full px-8 py-3.5 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-white font-bold text-base shadow-lg shadow-orange-500/30 hover:brightness-110 hover:scale-105 transition-all"
+                  >
+                    Register Another Contestant
+                  </button>
+                  <button
+                    type="button"
                     onClick={() =>
                       router.push(
                         `/pass?id=${success.contestant.contestant_id}`
                       )
                     }
-                    className="w-full px-8 py-3.5 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-white font-bold text-base shadow-lg shadow-orange-500/30 hover:brightness-110 hover:scale-105 transition-all"
+                    className="w-full px-8 py-3.5 rounded-full bg-white/10 border border-white/20 text-white font-semibold text-base backdrop-blur hover:bg-white/20 transition-colors"
                   >
                     View My Digital Pass
                   </button>
