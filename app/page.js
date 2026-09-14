@@ -254,10 +254,10 @@ export default function Home() {
               {activeTab === "how" && (
                 <div className="text-center mb-8">
                   <h2 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 bg-clip-text text-transparent">
-                    How It Works
+                    Three Easy Steps to the Stage
                   </h2>
                   <p className="text-white/80 mt-2">
-                    Three simple steps to your audition pass
+                    Follow along — you&apos;ll be ready to audition in minutes.
                   </p>
                 </div>
               )}
