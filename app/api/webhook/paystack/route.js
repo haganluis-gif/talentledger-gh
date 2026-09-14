@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import {
   getPaystackSecretKey,
-  AUDITION_FEE_PESEWAS,
+  getProgramFee,
   AUDITION_FEE_CURRENCY,
 } from "@/lib/paystack";
 
@@ -55,10 +55,28 @@ export async function POST(request) {
       return NextResponse.json({ error: "Missing contestant ID." }, { status: 400 });
     }
 
-    // Only honour verified charges for the exact configured amount.
-    // Reject refunds, partial payments, or wrong-currency charges.
+    // Derive the expected amount from the contestant's *stored* program
+    // (never from client-supplied metadata), so a forged program cannot
+    // pass through an unverified cheaper charge.
+    const supabaseAdmin = getSupabaseAdmin();
+    const { data: contestant } = await supabaseAdmin
+      .from("contestants")
+      .select("program")
+      .eq("contestant_id", contestantId)
+      .maybeSingle();
+
+    if (!contestant) {
+      return NextResponse.json({ error: "Contestant not found." }, { status: 400 });
+    }
+
+    const expectedAmount = getProgramFee(contestant.program);
+
+    // Only honour verified charges for the exact configured amount for
+    // the contestant's program. Reject refunds, partial payments, or
+    // wrong-currency charges. A repeated `charge.success` for the same
+    // reference simply re-sets `paid` (idempotent in effect).
     if (
-      event.data?.amount !== AUDITION_FEE_PESEWAS ||
+      event.data?.amount !== expectedAmount ||
       event.data?.currency !== AUDITION_FEE_CURRENCY ||
       typeof event.data?.reference !== "string" ||
       !event.data.reference
@@ -69,7 +87,6 @@ export async function POST(request) {
       );
     }
 
-    const supabaseAdmin = getSupabaseAdmin();
     const { error } = await supabaseAdmin
       .from("contestants")
       .update({ payment_status: "paid" })

@@ -10,7 +10,7 @@ const securityHeaders = [
     "default-src 'self'",
     "script-src 'self' 'unsafe-inline' https://js.paystack.co https://checkout.paystack.com",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob:",
+    "img-src 'self' data: blob: https://*.supabase.co",
     "media-src 'self' blob: https://*.supabase.co",
     "font-src 'self' data:",
     "connect-src 'self' https://*.supabase.co https://api.paystack.co",
@@ -29,6 +29,11 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ["172.18.0.1"],
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "*.supabase.co" },
+    ],
+  },
   turbopack: {
     root: __dirname,
   },

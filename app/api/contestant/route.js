@@ -35,7 +35,9 @@ export async function GET(request) {
     const supabaseAdmin = getSupabaseAdmin();
     const { data: contestant, error } = await supabaseAdmin
       .from("contestants")
-      .select("id, contestant_id, full_name, location, payment_status, created_at")
+      .select(
+        "id, contestant_id, full_name, location, payment_status, created_at, program, age, city, church_denomination, media_url"
+      )
       .eq("contestant_id", id)
       .single();
 

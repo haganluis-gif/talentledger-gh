@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import {
   getPaystackSecretKey,
-  AUDITION_FEE_PESEWAS,
+  getProgramFee,
   AUDITION_FEE_CURRENCY,
 } from "@/lib/paystack";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
@@ -48,7 +48,7 @@ export async function POST(request) {
 
     const { data: contestant, error: fetchError } = await supabaseAdmin
       .from("contestants")
-      .select("contestant_id, full_name, phone, payment_status")
+      .select("contestant_id, full_name, phone, payment_status, program")
       .eq("contestant_id", contestantId)
       .single();
 
@@ -58,6 +58,10 @@ export async function POST(request) {
         { status: 404 }
       );
     }
+
+    // The fee is resolved from the *stored* program, never from the
+    // client, so a caller cannot downgrade to a cheaper program.
+    const fee = getProgramFee(contestant.program);
 
     const secretKey = getPaystackSecretKey();
 
@@ -94,11 +98,12 @@ export async function POST(request) {
         },
         body: JSON.stringify({
           email: `${contestant.phone.replace(/[\s-]/g, "")}@talentledgergh.com`,
-          amount: AUDITION_FEE_PESEWAS,
+          amount: fee,
           currency: AUDITION_FEE_CURRENCY,
           metadata: {
             contestant_id: contestantId,
             full_name: contestant.full_name,
+            program: contestant.program || "ngs",
           },
           callback_url: `${process.env.NEXT_PUBLIC_APP_URL}/pass?id=${contestantId}`,
         }),

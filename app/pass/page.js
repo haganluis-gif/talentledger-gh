@@ -41,6 +41,17 @@ export default function PassPage() {
     fetchContestant();
   }, [id]);
 
+  const isAkwaaba = contestant?.program === "akwaaba";
+  const mediaUrls = (() => {
+    if (!contestant?.media_url) return null;
+    try {
+      const parsed = JSON.parse(contestant.media_url);
+      return Array.isArray(parsed) && parsed.length === 2 ? parsed : null;
+    } catch {
+      return null;
+    }
+  })();
+
   if (loading) {
     return (
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -65,11 +76,40 @@ export default function PassPage() {
       <div className="relative w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="bg-gradient-to-r from-green-600 to-green-700 p-6 text-center">
-            <h1 className="text-2xl font-bold text-white">The Next Gospel Star</h1>
-            <p className="text-green-100 text-sm mt-1">Digital Audition Pass</p>
+            <h1 className="text-2xl font-bold text-white">
+              {isAkwaaba ? "Miss Akwaaba" : "The Next Gospel Star"}
+            </h1>
+            <p className="text-green-100 text-sm mt-1">
+              {isAkwaaba ? "Digital Pageant Pass" : "Digital Audition Pass"}
+            </p>
           </div>
 
           <div className="p-6 space-y-4">
+            {mediaUrls && (
+              <div className="grid grid-cols-2 gap-3">
+                <div className="text-center">
+                  <img
+                    src={mediaUrls[0]}
+                    alt="Headshot"
+                    className="w-full h-36 object-cover rounded-lg border border-gray-200"
+                  />
+                  <p className="text-xs text-gray-500 mt-1 uppercase tracking-wide">
+                    Headshot
+                  </p>
+                </div>
+                <div className="text-center">
+                  <img
+                    src={mediaUrls[1]}
+                    alt="Traditional"
+                    className="w-full h-36 object-cover rounded-lg border border-gray-200"
+                  />
+                  <p className="text-xs text-gray-500 mt-1 uppercase tracking-wide">
+                    Traditional
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="text-center">
               <p className="text-xs text-gray-500 uppercase tracking-wide">
                 Contestant ID
@@ -99,11 +139,23 @@ export default function PassPage() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500 text-sm">Location</span>
+                <span className="text-gray-500 text-sm">
+                  {isAkwaaba ? "Region" : "Location"}
+                </span>
                 <span className="text-gray-800 font-medium text-sm">
-                  {contestant.location}
+                  {isAkwaaba
+                    ? contestant.city || "-"
+                    : contestant.location || "-"}
                 </span>
               </div>
+              {isAkwaaba && (
+                <div className="flex justify-between">
+                  <span className="text-gray-500 text-sm">Languages</span>
+                  <span className="text-gray-800 font-medium text-sm">
+                    {contestant.church_denomination || "-"}
+                  </span>
+                </div>
+              )}
             </div>
 
             {qrUrl && (

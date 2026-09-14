@@ -111,7 +111,7 @@ export async function DELETE(request) {
 
     const { data: contestant, error: fetchError } = await supabaseAdmin
       .from("contestants")
-      .select("contestant_id, clip_url")
+      .select("contestant_id, clip_url, media_url")
       .eq("contestant_id", id)
       .maybeSingle();
 
@@ -143,15 +143,35 @@ export async function DELETE(request) {
       );
     }
 
+    // Remove every stored object for this contestant: the audition
+    // clip (Gospel Star) and the headshot + traditional photos (Miss
+    // Akwaaba), derived solely from stored URLs so a client can never
+    // name arbitrary paths to delete.
+    const storagePaths = new Set();
     if (contestant.clip_url) {
-      const storagePath = extractStoragePath(contestant.clip_url);
-      if (storagePath) {
-        const { error: storageError } = await supabaseAdmin.storage
-          .from("audition-clips")
-          .remove([storagePath]);
-        if (storageError) {
-          console.error("Storage cleanup error:", storageError);
+      const clipPath = extractStoragePath(contestant.clip_url);
+      if (clipPath) storagePaths.add(clipPath);
+    }
+    if (contestant.media_url) {
+      try {
+        const urls = JSON.parse(contestant.media_url);
+        for (const url of urls) {
+          if (typeof url === "string") {
+            const photoPath = extractStoragePath(url);
+            if (photoPath) storagePaths.add(photoPath);
+          }
         }
+      } catch {
+        // Malformed media_url — nothing further to remove.
+      }
+    }
+
+    if (storagePaths.size > 0) {
+      const { error: storageError } = await supabaseAdmin.storage
+        .from("audition-clips")
+        .remove([...storagePaths]);
+      if (storageError) {
+        console.error("Storage cleanup error:", storageError);
       }
     }
 

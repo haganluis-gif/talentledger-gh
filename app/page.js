@@ -5,9 +5,13 @@ import { useRouter } from "next/navigation";
 import { useDropzone } from "react-dropzone";
 import {
   validateRegistration,
+  validateAkwaabaRegistration,
   MEDIA_TYPES,
   MEDIA_EXTENSIONS,
   MAX_MEDIA_SIZE,
+  IMAGE_TYPES,
+  IMAGE_EXTENSIONS,
+  MAX_PHOTO_SIZE,
 } from "@/lib/validation";
 import VideoBackground from "@/components/VideoBackground";
 
@@ -25,8 +29,14 @@ export default function Home() {
     fullName: "",
     location: "",
     phone: "",
+    age: "",
+    region: "",
+    languages: "",
   });
+  const [program, setProgram] = useState("ngs"); // ngs | akwaaba
   const [file, setFile] = useState(null);
+  const [headshot, setHeadshot] = useState(null);
+  const [traditional, setTraditional] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState([]);
@@ -54,7 +64,46 @@ export default function Home() {
     }
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const onDropHeadshot = useCallback((acceptedFiles, rejectedFiles) => {
+    if (acceptedFiles.length > 0) {
+      setHeadshot(acceptedFiles[0]);
+      return;
+    }
+    if (rejectedFiles.length > 0) {
+      const rejected = rejectedFiles[0];
+      if (rejected.file.size > MAX_PHOTO_SIZE) {
+        setErrors(["Headshot photo must be 1.5MB or smaller."]);
+      } else {
+        setErrors([
+          `Invalid headshot type. Allowed: ${IMAGE_EXTENSIONS.join(", ")}`,
+        ]);
+      }
+    }
+  }, []);
+
+  const onDropTraditional = useCallback((acceptedFiles, rejectedFiles) => {
+    if (acceptedFiles.length > 0) {
+      setTraditional(acceptedFiles[0]);
+      return;
+    }
+    if (rejectedFiles.length > 0) {
+      const rejected = rejectedFiles[0];
+      if (rejected.file.size > MAX_PHOTO_SIZE) {
+        setErrors(["Traditional photo must be 1.5MB or smaller."]);
+      } else {
+        setErrors([
+          `Invalid traditional photo type. Allowed: ${IMAGE_EXTENSIONS.join(", ")}`,
+        ]);
+      }
+    }
+  }, []);
+
+  const imageAccept = IMAGE_TYPES.reduce((acc, type) => {
+    acc[type] = IMAGE_EXTENSIONS;
+    return acc;
+  }, {});
+
+  const clipDropzone = useDropzone({
     onDrop,
     accept: MEDIA_TYPES.reduce((acc, type) => {
       acc[type] = MEDIA_EXTENSIONS;
@@ -65,16 +114,46 @@ export default function Home() {
     useFsAccessApi: false,
   });
 
+  const headshotDropzone = useDropzone({
+    onDrop: onDropHeadshot,
+    accept: imageAccept,
+    maxFiles: 1,
+    maxSize: MAX_PHOTO_SIZE,
+    useFsAccessApi: false,
+  });
+
+  const traditionalDropzone = useDropzone({
+    onDrop: onDropTraditional,
+    accept: imageAccept,
+    maxFiles: 1,
+    maxSize: MAX_PHOTO_SIZE,
+    useFsAccessApi: false,
+  });
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const resetForm = () => {
-    setForm({ fullName: "", location: "", phone: "" });
+    setForm({ fullName: "", location: "", phone: "", age: "", region: "", languages: "" });
     setFile(null);
+    setHeadshot(null);
+    setTraditional(null);
     setErrors([]);
     setMessage("");
     setSuccess(null);
+  };
+
+  const switchProgram = (next) => {
+    if (next === program) return;
+    setProgram(next);
+    // Never leak files/fields from one program into the other.
+    setFile(null);
+    setHeadshot(null);
+    setTraditional(null);
+    setForm((f) => ({ ...f, age: "", region: "", languages: "", location: "" }));
+    setErrors([]);
+    setMessage("");
   };
 
   const startApplication = () => {
@@ -102,7 +181,18 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationErrors = validateRegistration({ ...form, file });
+    const validationErrors =
+      program === "akwaaba"
+        ? validateAkwaabaRegistration({
+            fullName: form.fullName,
+            phone: form.phone,
+            age: form.age,
+            region: form.region,
+            languages: form.languages,
+            headshot,
+            traditional,
+          })
+        : validateRegistration({ ...form, file });
 
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
@@ -115,10 +205,20 @@ export default function Home() {
 
     try {
       const formData = new FormData();
+      formData.append("program", program);
       formData.append("fullName", form.fullName);
-      formData.append("location", form.location);
       formData.append("phone", form.phone);
-      formData.append("file", file);
+
+      if (program === "akwaaba") {
+        formData.append("age", form.age);
+        formData.append("region", form.region);
+        formData.append("languages", form.languages);
+        formData.append("headshot", headshot);
+        formData.append("traditional", traditional);
+      } else {
+        formData.append("location", form.location);
+        formData.append("file", file);
+      }
 
       const res = await fetch("/api/register", {
         method: "POST",
@@ -428,13 +528,47 @@ export default function Home() {
               </button>
 
               <div className="rounded-2xl p-4 sm:p-8 bg-gradient-to-br from-slate-900/95 via-purple-950/95 to-slate-900/95 border border-amber-400/20 shadow-2xl shadow-black/60 backdrop-blur-xl">
-                <div className="text-center mb-4 sm:mb-8">
+                <div className="text-center mb-4 sm:mb-5">
                   <h1 className="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(251,191,36,0.35)]">
-                    ⭐ The Next Gospel Star ⭐
+                    {program === "akwaaba" ? "👑 Miss Akwaaba 👑" : "⭐ The Next Gospel Star ⭐"}
                   </h1>
                   <p className="text-amber-200/80 mt-1 sm:mt-2">
-                    Contestant Application Form
+                    Application Form
                   </p>
+                </div>
+
+                <div className="mb-4 sm:mb-6">
+                  <p className="text-sm font-medium text-amber-200 mb-2">
+                    Which application are you submitting?
+                  </p>
+                  <div className="grid grid-cols-2 gap-2" role="group" aria-label="Choose application program">
+                    <button
+                      id="btnGospel"
+                      type="button"
+                      onClick={() => switchProgram("ngs")}
+                      aria-pressed={program === "ngs"}
+                      className={`px-3 py-3 rounded-xl border text-sm font-bold transition-all ${
+                        program === "ngs"
+                          ? "bg-gradient-to-r from-amber-400 to-orange-500 text-slate-900 border-transparent shadow-lg shadow-orange-500/25"
+                          : "bg-white/5 border-white/15 text-white/70 hover:bg-white/10"
+                      }`}
+                    >
+                      ⭐ Gospel Star
+                    </button>
+                    <button
+                      id="btnAkwaaba"
+                      type="button"
+                      onClick={() => switchProgram("akwaaba")}
+                      aria-pressed={program === "akwaaba"}
+                      className={`px-3 py-3 rounded-xl border text-sm font-bold transition-all ${
+                        program === "akwaaba"
+                          ? "bg-gradient-to-r from-amber-400 to-orange-500 text-slate-900 border-transparent shadow-lg shadow-orange-500/25"
+                          : "bg-white/5 border-white/15 text-white/70 hover:bg-white/10"
+                      }`}
+                    >
+                      👑 Miss Akwaaba
+                    </button>
+                  </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-5">
@@ -452,19 +586,137 @@ export default function Home() {
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-amber-200 mb-1">
-                      Location
-                    </label>
-                    <input
-                      type="text"
-                      name="location"
-                      value={form.location}
-                      onChange={handleChange}
-                      placeholder="e.g. Accra, Ghana"
-                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/15 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base backdrop-blur"
-                    />
-                  </div>
+                  {program === "ngs" ? (
+                    <div>
+                      <label className="block text-sm font-medium text-amber-200 mb-1">
+                        Location
+                      </label>
+                      <input
+                        type="text"
+                        name="location"
+                        value={form.location}
+                        onChange={handleChange}
+                        placeholder="e.g. Accra, Ghana"
+                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/15 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base backdrop-blur"
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-amber-200 mb-1">
+                          Age
+                        </label>
+                        <input
+                          type="number"
+                          name="age"
+                          min="16"
+                          max="99"
+                          value={form.age}
+                          onChange={handleChange}
+                          placeholder="Enter your age"
+                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/15 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base backdrop-blur"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-amber-200 mb-1">
+                          Region
+                        </label>
+                        <input
+                          type="text"
+                          name="region"
+                          value={form.region}
+                          onChange={handleChange}
+                          placeholder="e.g. Greater Accra"
+                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/15 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base backdrop-blur"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-amber-200 mb-1">
+                          Languages Spoken
+                        </label>
+                        <input
+                          type="text"
+                          name="languages"
+                          value={form.languages}
+                          onChange={handleChange}
+                          placeholder="e.g. English, Twi"
+                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/15 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base backdrop-blur"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-amber-200 mb-1">
+                          Headshot Photo
+                        </label>
+                        <div
+                          {...headshotDropzone.getRootProps()}
+                          className={`border-2 border-dashed rounded-lg p-4 sm:p-5 text-center cursor-pointer transition-colors ${
+                            headshotDropzone.isDragActive
+                              ? "border-amber-400 bg-amber-400/10"
+                              : "border-amber-300/30 hover:border-amber-400"
+                          }`}
+                        >
+                          <input {...headshotDropzone.getInputProps()} />
+                          {headshot ? (
+                            <div>
+                              <p className="text-amber-300 font-medium">
+                                {headshot.name}
+                              </p>
+                              <p className="text-sm text-gray-400 mt-1">
+                                {(headshot.size / (1024 * 1024)).toFixed(2)} MB
+                              </p>
+                            </div>
+                          ) : (
+                            <div>
+                              <p className="text-amber-100/90">
+                                Drag & drop a clear face photo, or tap to browse
+                              </p>
+                              <p className="text-sm text-gray-400 mt-1">
+                                JPEG, PNG, WebP (max 1.5MB)
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-amber-200 mb-1">
+                          Traditional Photo
+                        </label>
+                        <div
+                          {...traditionalDropzone.getRootProps()}
+                          className={`border-2 border-dashed rounded-lg p-4 sm:p-5 text-center cursor-pointer transition-colors ${
+                            traditionalDropzone.isDragActive
+                              ? "border-amber-400 bg-amber-400/10"
+                              : "border-amber-300/30 hover:border-amber-400"
+                          }`}
+                        >
+                          <input {...traditionalDropzone.getInputProps()} />
+                          {traditional ? (
+                            <div>
+                              <p className="text-amber-300 font-medium">
+                                {traditional.name}
+                              </p>
+                              <p className="text-sm text-gray-400 mt-1">
+                                {(traditional.size / (1024 * 1024)).toFixed(2)} MB
+                              </p>
+                            </div>
+                          ) : (
+                            <div>
+                              <p className="text-amber-100/90">
+                                Drag & drop your photo in traditional attire, or tap to browse
+                              </p>
+                              <p className="text-sm text-gray-400 mt-1">
+                                JPEG, PNG, WebP (max 1.5MB)
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
 
                   <div>
                     <label className="block text-sm font-medium text-amber-200 mb-1">
@@ -480,40 +732,42 @@ export default function Home() {
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-amber-200 mb-1">
-                      30-Second Audition Clip
-                    </label>
-                    <div
-                      {...getRootProps()}
-                      className={`border-2 border-dashed rounded-lg p-4 sm:p-6 text-center cursor-pointer transition-colors ${
-                        isDragActive
-                          ? "border-amber-400 bg-amber-400/10"
-                          : "border-amber-300/30 hover:border-amber-400"
-                      }`}
-                    >
-                      <input {...getInputProps()} />
-                      {file ? (
-                        <div>
-                          <p className="text-amber-300 font-medium">
-                            {file.name}
-                          </p>
-                          <p className="text-sm text-gray-400 mt-1">
-                            {(file.size / (1024 * 1024)).toFixed(2)} MB
-                          </p>
-                        </div>
-                      ) : (
-                        <div>
-                          <p className="text-amber-100/90">
-                            Drag & drop your clip here, or tap to browse
-                          </p>
-                          <p className="text-sm text-gray-400 mt-1">
-                            MP4, MOV, AVI, WebM, MP3, WAV (max 4MB)
-                          </p>
-                        </div>
-                      )}
+                  {program === "ngs" ? (
+                    <div>
+                      <label className="block text-sm font-medium text-amber-200 mb-1">
+                        30-Second Audition Clip
+                      </label>
+                      <div
+                        {...clipDropzone.getRootProps()}
+                        className={`border-2 border-dashed rounded-lg p-4 sm:p-6 text-center cursor-pointer transition-colors ${
+                          clipDropzone.isDragActive
+                            ? "border-amber-400 bg-amber-400/10"
+                            : "border-amber-300/30 hover:border-amber-400"
+                        }`}
+                      >
+                        <input {...clipDropzone.getInputProps()} />
+                        {file ? (
+                          <div>
+                            <p className="text-amber-300 font-medium">
+                              {file.name}
+                            </p>
+                            <p className="text-sm text-gray-400 mt-1">
+                              {(file.size / (1024 * 1024)).toFixed(2)} MB
+                            </p>
+                          </div>
+                        ) : (
+                          <div>
+                            <p className="text-amber-100/90">
+                              Drag & drop your clip here, or tap to browse
+                            </p>
+                            <p className="text-sm text-gray-400 mt-1">
+                              MP4, MOV, AVI, WebM, MP3, WAV (max 4MB)
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  ) : null}
 
                   <button
                     type="submit"
@@ -557,14 +811,17 @@ export default function Home() {
                   </span>
                   ! {"We're"} so excited to have you join the{" "}
                   <span className="text-amber-300 font-semibold">
-                    Ceejay Multimedia Audition
-                  </span>{" "}
-                  — The Next Gospel Star. Your audition clip has been received
-                  safely.
+                    {success.contestant.program === "akwaaba"
+                      ? "Miss Akwaaba"
+                      : "Ceejay Multimedia Audition"}
+                  </span>
+                  .{" "}
+                  {success.contestant.program === "akwaaba"
+                    ? "Your photos have been received safely."
+                    : "Your audition clip has been received safely."}
                 </p>
                 <p className="text-white/70 mt-3 leading-relaxed">
-                  We will be happy to see you and your amazing talent at the
-                  audition venue. 🌟
+                  We will be happy to see you at the venue. 🌟
                 </p>
 
                 <div className="mt-6 rounded-2xl bg-white/10 border border-amber-400/20 p-4">

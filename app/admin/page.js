@@ -322,19 +322,62 @@ export default function AdminPage() {
                     <span className="font-mono text-sm font-bold text-amber-600">
                       {c.contestant_id}
                     </span>
-                    <span
-                      className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                        c.payment_status === "paid"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}
-                    >
-                      {c.payment_status === "paid" ? "Paid" : "Pending"}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`text-[11px] font-semibold px-2 py-1 rounded-full ${
+                          c.program === "akwaaba"
+                            ? "bg-purple-100 text-purple-700"
+                            : "bg-blue-100 text-blue-700"
+                        }`}
+                      >
+                        {c.program === "akwaaba" ? "Miss Akwaaba" : "Gospel Star"}
+                      </span>
+                      <span
+                        className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                          c.payment_status === "paid"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {c.payment_status === "paid" ? "Paid" : "Pending"}
+                      </span>
+                    </div>
                   </div>
                   <h3 className="font-semibold text-gray-800">{c.full_name}</h3>
-                  <p className="text-sm text-gray-500">{c.location}</p>
-                  <p className="text-sm text-gray-500">{c.phone}</p>
+                  {c.program === "akwaaba" ? (
+                    <>
+                      <p className="text-sm text-gray-500">
+                        {c.city ? `Region: ${c.city}` : ""}
+                      </p>
+                      <p className="text-sm text-gray-500">{c.phone}</p>
+                      {c.media_url ? (
+                        <div className="flex gap-2 mt-2">
+                          {(() => {
+                            try {
+                              const urls = JSON.parse(c.media_url);
+                              return urls
+                                .filter((u) => typeof u === "string" && u)
+                                .map((u, i) => (
+                                  <img
+                                    key={i}
+                                    src={u}
+                                    alt={i === 0 ? "Headshot" : "Traditional"}
+                                    className="w-16 h-16 object-cover rounded-lg border border-gray-200"
+                                  />
+                                ));
+                            } catch {
+                              return null;
+                            }
+                          })()}
+                        </div>
+                      ) : null}
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-sm text-gray-500">{c.location}</p>
+                      <p className="text-sm text-gray-500">{c.phone}</p>
+                    </>
+                  )}
                 </div>
 
                 {c.clip_url ? (
