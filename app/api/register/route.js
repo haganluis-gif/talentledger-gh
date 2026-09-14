@@ -1,9 +1,36 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
-import { validateRegistration } from "@/lib/validation";
+import {
+  validateRegistration,
+  isValidMediaHeader,
+  extensionForMime,
+  isSafeFilename,
+  MAX_MEDIA_SIZE,
+} from "@/lib/validation";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { isSameOrigin } from "@/lib/request-guard";
 
 export async function POST(request) {
   try {
+    if (!isSameOrigin(request)) {
+      return NextResponse.json(
+        { error: "Cross-origin request blocked." },
+        { status: 403 }
+      );
+    }
+
+    const limiter = rateLimit(`register:${clientIp(request)}`, {
+      limit: 10,
+      windowMs: 10 * 60 * 1000, // 10 per 10 minutes per IP
+    });
+    if (!limiter.allowed) {
+      return NextResponse.json(
+        { error: "Too many submissions. Try again later." },
+        { status: 429, headers: { "Retry-After": String(limiter.retryAfter) } }
+      );
+    }
+
     const supabaseAdmin = getSupabaseAdmin();
     const formData = await request.formData();
     const fullName = formData.get("fullName");
@@ -17,12 +44,38 @@ export async function POST(request) {
       return NextResponse.json({ errors }, { status: 400 });
     }
 
-    const contestantId = `TLG-${Date.now().toString(36).toUpperCase()}`;
+    if (!isSafeFilename(file.name)) {
+      return NextResponse.json(
+        { errors: ["Invalid file name."] },
+        { status: 400 }
+      );
+    }
 
-    const fileExt = file.name.split(".").pop();
-    const filePath = `auditions/${contestantId}.${fileExt}`;
+    const ext = extensionForMime(file.type);
+    if (!ext) {
+      return NextResponse.json({ errors: ["Unsupported file type."] }, { status: 400 });
+    }
 
     const buffer = Buffer.from(await file.arrayBuffer());
+    if (buffer.length === 0 || buffer.length > MAX_MEDIA_SIZE) {
+      return NextResponse.json(
+        { errors: ["File must be 4MB or smaller."] },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidMediaHeader(file.type, buffer)) {
+      return NextResponse.json(
+        { errors: ["File content does not match a supported media type."] },
+        { status: 400 }
+      );
+    }
+
+    // Unguessable, non-enumerable contestant ID.
+    const contestantId = `TLG-${randomUUID().replace(/-/g, "").toUpperCase()}`;
+
+    // Path is fully server-controlled (ID + extension from validated MIME).
+    const filePath = `auditions/${contestantId}.${ext}`;
 
     const { error: uploadError } = await supabaseAdmin.storage
       .from("audition-clips")
@@ -53,11 +106,13 @@ export async function POST(request) {
         clip_url: urlData.publicUrl,
         payment_status: "pending",
       })
-      .select()
+      .select("id, contestant_id, full_name, location, payment_status")
       .single();
 
     if (dbError) {
       console.error("DB error:", dbError);
+      // Don't leave an orphaned clip behind.
+      await supabaseAdmin.storage.from("audition-clips").remove([filePath]);
       return NextResponse.json(
         { error: "Failed to save contestant data." },
         { status: 500 }

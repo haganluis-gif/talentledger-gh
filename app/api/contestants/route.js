@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { getSessionFromRequest } from "@/lib/auth";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { isSameOrigin } from "@/lib/request-guard";
 
 function isAuthorized(request) {
-  const adminPassword = process.env.ADMIN_PASSWORD;
-  if (!adminPassword) return false;
-  return request.headers.get("x-admin-password") === adminPassword;
+  return getSessionFromRequest(request);
 }
 
 function extractStoragePath(clipUrl) {
@@ -21,10 +22,24 @@ function extractStoragePath(clipUrl) {
 
 export async function GET(request) {
   try {
-    if (!isAuthorized(request)) {
+    if (!isSameOrigin(request)) {
       return NextResponse.json(
-        { error: "Invalid admin password." },
-        { status: 401 }
+        { error: "Cross-origin request blocked." },
+        { status: 403 }
+      );
+    }
+    if (!isAuthorized(request)) {
+      return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+    }
+
+    const limiter = rateLimit(`admin-list:${clientIp(request)}`, {
+      limit: 120,
+      windowMs: 60 * 1000,
+    });
+    if (!limiter.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests." },
+        { status: 429, headers: { "Retry-After": String(limiter.retryAfter) } }
       );
     }
 
@@ -35,11 +50,16 @@ export async function GET(request) {
       .order("created_at", { ascending: false });
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error("List error:", error);
+      return NextResponse.json(
+        { error: "Failed to load contestants." },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ contestants }, { status: 200 });
   } catch (err) {
+    console.error("List error:", err);
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 }
@@ -49,10 +69,24 @@ export async function GET(request) {
 
 export async function DELETE(request) {
   try {
-    if (!isAuthorized(request)) {
+    if (!isSameOrigin(request)) {
       return NextResponse.json(
-        { error: "Invalid admin password." },
-        { status: 401 }
+        { error: "Cross-origin request blocked." },
+        { status: 403 }
+      );
+    }
+    if (!isAuthorized(request)) {
+      return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+    }
+
+    const limiter = rateLimit(`admin-delete:${clientIp(request)}`, {
+      limit: 30,
+      windowMs: 60 * 1000,
+    });
+    if (!limiter.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests." },
+        { status: 429, headers: { "Retry-After": String(limiter.retryAfter) } }
       );
     }
 
@@ -66,6 +100,13 @@ export async function DELETE(request) {
       );
     }
 
+    if (!/^[A-Za-z0-9-]+$/.test(id)) {
+      return NextResponse.json(
+        { error: "Invalid contestant ID." },
+        { status: 400 }
+      );
+    }
+
     const supabaseAdmin = getSupabaseAdmin();
 
     const { data: contestant, error: fetchError } = await supabaseAdmin
@@ -75,7 +116,11 @@ export async function DELETE(request) {
       .maybeSingle();
 
     if (fetchError) {
-      return NextResponse.json({ error: fetchError.message }, { status: 500 });
+      console.error("Fetch error:", fetchError);
+      return NextResponse.json(
+        { error: "Failed to load contestant." },
+        { status: 500 }
+      );
     }
 
     if (!contestant) {
@@ -91,7 +136,11 @@ export async function DELETE(request) {
       .eq("contestant_id", id);
 
     if (dbError) {
-      return NextResponse.json({ error: dbError.message }, { status: 500 });
+      console.error("Delete error:", dbError);
+      return NextResponse.json(
+        { error: "Failed to remove contestant." },
+        { status: 500 }
+      );
     }
 
     if (contestant.clip_url) {
@@ -107,7 +156,7 @@ export async function DELETE(request) {
     }
 
     return NextResponse.json(
-      { message: "Contestant removed.", contestant },
+      { message: "Contestant removed." },
       { status: 200 }
     );
   } catch (err) {

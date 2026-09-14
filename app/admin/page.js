@@ -13,21 +13,47 @@ export default function AdminPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    const result = await fetchContestants({ password });
-    if (result.ok) {
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "Invalid password.");
+        return;
+      }
       setAuthenticated(true);
-    } else {
-      setError(result.error || "Invalid password.");
+      setPassword("");
+      const loaded = await fetchContestants();
+      if (!loaded.ok) {
+        setError(loaded.error || "Failed to load contestants.");
+      }
+    } catch (err) {
+      setError("Failed to log in.");
     }
   };
 
-  const fetchContestants = async ({ password: pw } = {}) => {
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+    } catch (err) {
+      // ignore network errors; still clear local state
+    }
+    setAuthenticated(false);
+    setContestants([]);
+    setPassword("");
+    setError("");
+  };
+
+  const fetchContestants = async () => {
     setLoading(true);
     try {
-      const headers = pw ? { "x-admin-password": pw } : {};
-      const res = await fetch("/api/contestants", { headers });
+      const res = await fetch("/api/contestants");
       const data = await res.json();
       if (!res.ok) {
+        if (res.status === 401) setAuthenticated(false);
         return { ok: false, error: data.error || "Failed to load contestants." };
       }
       setContestants(data.contestants || []);
@@ -53,11 +79,14 @@ export default function AdminPage() {
         `/api/contestants?id=${encodeURIComponent(contestant.contestant_id)}`,
         {
           method: "DELETE",
-          headers: { "x-admin-password": password },
         }
       );
       const data = await res.json();
       if (!res.ok) {
+        if (res.status === 401) {
+          setAuthenticated(false);
+          return;
+        }
         setError(data.error || "Failed to remove contestant.");
         return;
       }
@@ -232,6 +261,12 @@ export default function AdminPage() {
                 />
               </svg>
               Refresh
+            </button>
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-700 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              Logout
             </button>
           </div>
         </div>

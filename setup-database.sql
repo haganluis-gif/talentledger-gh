@@ -1,6 +1,13 @@
 -- ============================================================
--- TalentLedger GH — Complete Supabase Setup
+-- TalentLedger GH — Complete Supabase Setup (SECURE)
 -- Run this in your Supabase SQL Editor (https://supabase.com/dashboard)
+--
+-- SECURITY MODEL:
+--   * The browser NEVER talks to Supabase directly. All data and
+--     storage operations go through Next.js API routes, which use the
+--     service_role key (bypasses RLS).
+--   * Anonymous + authenticated roles receive NO grants.
+--   * RLS stays ENFORCED as defense-in-depth.
 -- ============================================================
 
 -- 1. TABLE: contestants
@@ -24,42 +31,20 @@ CREATE INDEX IF NOT EXISTS idx_contestants_contestant_id
 CREATE INDEX IF NOT EXISTS idx_contestants_created_at
   ON public.contestants (created_at DESC);
 
--- 2. ROW LEVEL SECURITY
+-- 2. ROW LEVEL SECURITY — enforced, NO public policies.
 ALTER TABLE public.contestants ENABLE ROW LEVEL SECURITY;
-
--- Public can read contestants (for pass page display)
-CREATE POLICY "Public read contestants"
-  ON public.contestants
-  FOR SELECT
-  USING (true);
-
--- Public can insert contestants (registration form)
-CREATE POLICY "Public insert contestants"
-  ON public.contestants
-  FOR INSERT
-  WITH CHECK (true);
-
--- Allow update for payment status (webhook uses service role which bypasses RLS,
--- but this policy is here for completeness if you ever use the anon key)
-CREATE POLICY "Update payment status"
-  ON public.contestants
-  FOR UPDATE
-  USING (true)
-  WITH CHECK (true);
-
--- Allow delete (admin uses service role which bypasses RLS)
-CREATE POLICY "Delete contestants"
-  ON public.contestants
-  FOR DELETE
-  USING (true);
+REVOKE ALL ON TABLE public.contestants FROM anon, authenticated;
 
 -- 3. STORAGE BUCKET: audition-clips
+--    public = true so the pass/admin <video> element can play clips
+--    through the unauthenticated public URL. All WRITES are done
+--    server-side (service_role key).
 INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 VALUES (
   'audition-clips',
   'audition-clips',
   true,
-  52428800,  -- 50MB in bytes
+  5242880,  -- 5MB in bytes (app cap is 4MB)
   ARRAY[
     'video/mp4',
     'video/quicktime',
@@ -77,21 +62,6 @@ ON CONFLICT (id) DO UPDATE SET
   file_size_limit = EXCLUDED.file_size_limit,
   allowed_mime_types = EXCLUDED.allowed_mime_types;
 
--- 4. STORAGE POLICIES
--- Public can view audition clips (for admin dashboard video playback)
-CREATE POLICY "Public read audition clips"
-  ON storage.objects
-  FOR SELECT
-  USING (bucket_id = 'audition-clips');
-
--- Anyone can upload audition clips (registration flow)
-CREATE POLICY "Insert audition clips"
-  ON storage.objects
-  FOR INSERT
-  WITH CHECK (bucket_id = 'audition-clips');
-
--- Allow delete for cleanup when admin removes a contestant
-CREATE POLICY "Delete audition clips"
-  ON storage.objects
-  FOR DELETE
-  USING (bucket_id = 'audition-clips');
+-- 4. STORAGE ACCESS — none for public/authenticated.
+--    Upload / delete happens only via the app (service_role key).
+REVOKE ALL ON TABLE storage.objects FROM anon, authenticated;

@@ -139,8 +139,16 @@ export default function Home() {
 
       const paymentData = await paymentRes.json();
 
-      if (paymentData.authorization_url) {
+      if (paymentRes.ok && paymentData.authorization_url) {
         window.location.href = paymentData.authorization_url;
+        return;
+      }
+
+      if (!paymentRes.ok) {
+        setMessage(
+          paymentData.error ||
+            "Your registration was saved, but payment could not be started."
+        );
         return;
       }
 

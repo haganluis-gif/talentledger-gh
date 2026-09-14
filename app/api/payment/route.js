@@ -1,22 +1,54 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
-import { getPaystackSecretKey } from "@/lib/paystack";
+import {
+  getPaystackSecretKey,
+  AUDITION_FEE_PESEWAS,
+  AUDITION_FEE_CURRENCY,
+} from "@/lib/paystack";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { isSameOrigin } from "@/lib/request-guard";
 
 export async function POST(request) {
   try {
-    const supabaseAdmin = getSupabaseAdmin();
-    const { contestantId } = await request.json();
+    if (!isSameOrigin(request)) {
+      return NextResponse.json(
+        { error: "Cross-origin request blocked." },
+        { status: 403 }
+      );
+    }
 
-    if (!contestantId) {
+    const limiter = rateLimit(`payment:${clientIp(request)}`, {
+      limit: 20,
+      windowMs: 10 * 60 * 1000, // 20 per 10 minutes per IP
+    });
+    if (!limiter.allowed) {
+      return NextResponse.json(
+        { error: "Too many payment attempts. Try again later." },
+        { status: 429, headers: { "Retry-After": String(limiter.retryAfter) } }
+      );
+    }
+
+    const supabaseAdmin = getSupabaseAdmin();
+    const body = await request.json().catch(() => null);
+    const contestantId = body?.contestantId;
+
+    if (typeof contestantId !== "string" || !contestantId) {
       return NextResponse.json(
         { error: "Contestant ID is required." },
         { status: 400 }
       );
     }
 
+    if (!/^[A-Za-z0-9-]+$/.test(contestantId)) {
+      return NextResponse.json(
+        { error: "Invalid contestant ID." },
+        { status: 400 }
+      );
+    }
+
     const { data: contestant, error: fetchError } = await supabaseAdmin
       .from("contestants")
-      .select("*")
+      .select("contestant_id, full_name, phone, payment_status")
       .eq("contestant_id", contestantId)
       .single();
 
@@ -30,16 +62,24 @@ export async function POST(request) {
     const secretKey = getPaystackSecretKey();
 
     if (!secretKey) {
+      if (process.env.NODE_ENV === "production") {
+        // Never auto-grant "paid" in production.
+        return NextResponse.json(
+          { error: "Payments are not configured yet." },
+          { status: 503 }
+        );
+      }
+      // Dev-only simulation: never shipped to production.
       const { data: updated } = await supabaseAdmin
         .from("contestants")
         .update({ payment_status: "paid" })
         .eq("contestant_id", contestantId)
-        .select()
+        .select("id, contestant_id, full_name, payment_status")
         .single();
 
       return NextResponse.json({
         status: "success",
-        message: "Payment simulated (no API key configured).",
+        message: "Payment simulated (dev only — no API key configured).",
         contestant: updated,
       });
     }
@@ -54,8 +94,8 @@ export async function POST(request) {
         },
         body: JSON.stringify({
           email: `${contestant.phone.replace(/[\s-]/g, "")}@talentledgergh.com`,
-          amount: 5000,
-          currency: "GHS",
+          amount: AUDITION_FEE_PESEWAS,
+          currency: AUDITION_FEE_CURRENCY,
           metadata: {
             contestant_id: contestantId,
             full_name: contestant.full_name,
@@ -77,7 +117,12 @@ export async function POST(request) {
     return NextResponse.json({
       status: "success",
       authorization_url: paystackData.data.authorization_url,
-      contestant,
+      contestant: {
+        id: contestant.id,
+        contestant_id: contestant.contestant_id,
+        full_name: contestant.full_name,
+        payment_status: contestant.payment_status,
+      },
     });
   } catch (err) {
     console.error("Payment error:", err);

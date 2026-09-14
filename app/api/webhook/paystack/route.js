@@ -1,7 +1,11 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
-import { getPaystackSecretKey } from "@/lib/paystack";
+import {
+  getPaystackSecretKey,
+  AUDITION_FEE_PESEWAS,
+  AUDITION_FEE_CURRENCY,
+} from "@/lib/paystack";
 
 export async function POST(request) {
   try {
@@ -34,7 +38,12 @@ export async function POST(request) {
       return NextResponse.json({ error: "Invalid signature." }, { status: 401 });
     }
 
-    const event = JSON.parse(rawBody);
+    let event;
+    try {
+      event = JSON.parse(rawBody);
+    } catch {
+      return NextResponse.json({ error: "Invalid payload." }, { status: 400 });
+    }
 
     if (event.event !== "charge.success") {
       return NextResponse.json({ received: true });
@@ -42,8 +51,22 @@ export async function POST(request) {
 
     const contestantId = event.data?.metadata?.contestant_id;
 
-    if (!contestantId) {
-      return NextResponse.json({ received: true });
+    if (!contestantId || typeof contestantId !== "string") {
+      return NextResponse.json({ error: "Missing contestant ID." }, { status: 400 });
+    }
+
+    // Only honour verified charges for the exact configured amount.
+    // Reject refunds, partial payments, or wrong-currency charges.
+    if (
+      event.data?.amount !== AUDITION_FEE_PESEWAS ||
+      event.data?.currency !== AUDITION_FEE_CURRENCY ||
+      typeof event.data?.reference !== "string" ||
+      !event.data.reference
+    ) {
+      return NextResponse.json(
+        { error: "Charge verification failed." },
+        { status: 400 }
+      );
     }
 
     const supabaseAdmin = getSupabaseAdmin();

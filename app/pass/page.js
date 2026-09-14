@@ -104,12 +104,6 @@ export default function PassPage() {
                   {contestant.location}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-500 text-sm">Phone</span>
-                <span className="text-gray-800 font-medium text-sm">
-                  {contestant.phone}
-                </span>
-              </div>
             </div>
 
             {qrUrl && (
