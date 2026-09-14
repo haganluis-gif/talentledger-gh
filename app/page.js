@@ -31,6 +31,11 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState([]);
   const [success, setSuccess] = useState(null);
+  const [openFaq, setOpenFaq] = useState(null);
+
+  const toggleFaq = (index) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
 
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -272,37 +277,108 @@ export default function Home() {
               )}
 
               {activeTab === "how" && (
-                <div className="grid gap-4 sm:grid-cols-3">
-                  {[
-                    {
-                      n: "01",
-                      title: "Fill in your details",
-                      text: "Tell us your name, location and upload your 30-second audition clip.",
-                    },
-                    {
-                      n: "02",
-                      title: "Complete your fee",
-                      text: "Pay the audition fee quickly and securely through Paystack.",
-                    },
-                    {
-                      n: "03",
-                      title: "Get your digital pass",
-                      text: "Receive your audition pass with a QR code and show it at the venue.",
-                    },
-                  ].map((step) => (
-                    <div
-                      key={step.n}
-                      className="bg-white/10 backdrop-blur border border-white/15 rounded-2xl p-6 text-center hover:border-amber-400/50 hover:bg-white/15 transition-all"
-                    >
-                      <span className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-slate-900 font-extrabold">
-                        {step.n}
-                      </span>
-                      <h3 className="text-white font-bold mt-4">{step.title}</h3>
-                      <p className="text-white/70 text-sm mt-2 leading-relaxed">
-                        {step.text}
-                      </p>
+                <div className="space-y-8 w-full max-w-4xl mx-auto">
+                  <div className="grid gap-4 sm:grid-cols-3 relative">
+                    {[
+                      {
+                        n: "01",
+                        icon: "📝",
+                        title: "Fill in your details",
+                        text: "Tell us your name, location and upload your 30-second audition clip (MP4, MOV, AVI, WebM, MP3 or WAV, up to 4MB).",
+                      },
+                      {
+                        n: "02",
+                        icon: "💳",
+                        title: "Complete your fee",
+                        text: "Pay the GHS 50 audition fee quickly and securely through Paystack.",
+                      },
+                      {
+                        n: "03",
+                        icon: "🎟️",
+                        title: "Get your digital pass",
+                        text: "Receive your audition pass with a QR code and show it at the venue on audition day.",
+                      },
+                    ].map((step) => (
+                      <div
+                        key={step.n}
+                        className="relative bg-white/10 backdrop-blur border border-white/15 rounded-2xl p-6 text-center hover:border-amber-400/50 hover:bg-white/15 hover:-translate-y-1 transition-all"
+                      >
+                        {step.n !== "03" && (
+                          <span className="hidden sm:flex absolute top-1/2 -right-3 z-10 w-6 h-6 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-slate-900 font-extrabold text-sm -translate-y-1/2">
+                            →
+                          </span>
+                        )}
+                        <span className="block text-4xl">{step.icon}</span>
+                        <span className="block mt-3 text-[11px] font-bold tracking-[0.25em] uppercase text-amber-300">
+                          Step {step.n}
+                        </span>
+                        <h3 className="text-white font-bold mt-1">
+                          {step.title}
+                        </h3>
+                        <p className="text-white/70 text-sm mt-2 leading-relaxed">
+                          {step.text}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="rounded-2xl bg-white/10 backdrop-blur border border-amber-400/20 p-5 sm:p-7">
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">🛎️</span>
+                      <div>
+                        <h3 className="text-white font-bold text-lg">
+                          Need Help?
+                        </h3>
+                        <p className="text-white/70 text-sm mt-0.5">
+                          Quick answers to the questions we hear the most.
+                        </p>
+                      </div>
                     </div>
-                  ))}
+
+                    <div className="mt-4 rounded-xl bg-white/5 border border-white/10 overflow-hidden">
+                      {[
+                        {
+                          q: "How much is the audition fee?",
+                          a: "The audition fee is GHS 50 per contestant. You pay it securely online through Paystack right after submitting your clip.",
+                        },
+                        {
+                          q: "What do I need to apply?",
+                          a: "Your full name, location, a valid Ghana phone number, and a 30-second audition clip (MP4, MOV, AVI, WebM, MP3 or WAV, up to 4MB).",
+                        },
+                        {
+                          q: "What happens after I apply?",
+                          a: "You'll receive a digital audition pass with your QR code. Just show it at the venue on audition day to check in.",
+                        },
+                      ].map((faq, i) => {
+                        const open = openFaq === i;
+                        return (
+                          <div key={faq.q} className="border-b border-white/10 last:border-b-0">
+                            <button
+                              type="button"
+                              onClick={() => toggleFaq(i)}
+                              className="w-full flex items-center justify-between gap-3 px-4 py-3.5 text-left hover:bg-white/5 transition-colors"
+                            >
+                              <span className="text-white/90 text-sm font-semibold">
+                                {faq.q}
+                              </span>
+                              <span
+                                className={`flex items-center justify-center w-6 h-6 shrink-0 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-slate-900 font-bold text-sm transition-transform ${
+                                  open ? "rotate-45" : ""
+                                }`}
+                              >
+                                +
+                              </span>
+                            </button>
+                            {open && (
+                              <p className="px-4 pb-4 -mt-1 text-sm text-white/70 leading-relaxed">
+                                {faq.a}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
               )}
 
