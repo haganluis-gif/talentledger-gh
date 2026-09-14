@@ -22,10 +22,13 @@ export default function PassPage() {
         const data = await res.json();
         if (data.contestant) {
           setContestant(data.contestant);
-          const qr = await QRCode.toDataURL(data.contestant.contestant_id, {
-            width: 200,
-            margin: 2,
-          });
+          const qr = await QRCode.toDataURL(
+            `${window.location.origin}/pass?id=${data.contestant.contestant_id}`,
+            {
+              width: 200,
+              margin: 2,
+            }
+          );
           setQrUrl(qr);
         }
       } catch (err) {
@@ -123,7 +126,7 @@ export default function PassPage() {
             )}
 
             <p className="text-center text-xs text-gray-400 mt-2">
-              Show this pass at the audition venue
+              Show this QR code at venue check-in to confirm your pass
             </p>
           </div>
         </div>
