@@ -7,7 +7,7 @@ export default function VideoBackground({ src = "/backgrounds/bg-main.mp4" }) {
         loop
         playsInline
         poster="/backgrounds/bg-poster.jpg"
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover -z-10"
       >
         <source src={src} type="video/mp4" />
       </video>

@@ -42,6 +42,7 @@ export default function Home() {
   const [errors, setErrors] = useState([]);
   const [success, setSuccess] = useState(null);
   const [openFaq, setOpenFaq] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
@@ -158,11 +159,13 @@ export default function Home() {
 
   const startApplication = () => {
     resetForm();
+    setMobileOpen(false);
     setView("form");
   };
 
   const goHome = () => {
     resetForm();
+    setMobileOpen(false);
     setView("landing");
     setActiveTab("home");
   };
@@ -267,7 +270,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col overflow-hidden">
+    <div className="relative isolate min-h-dvh w-full flex flex-col overflow-hidden">
       <VideoBackground />
 
       <div className="relative flex-1 flex flex-col px-4 py-5 sm:py-8">
@@ -280,12 +283,12 @@ export default function Home() {
             <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-orange-500/30 text-xl">
               ⭐
             </span>
-            <span className="text-white font-bold text-base sm:text-lg">
+            <span className="hidden sm:inline text-white font-bold text-base sm:text-lg">
               Ceejay Multimedia
             </span>
           </button>
 
-          <nav className="flex items-center gap-1 bg-white/10 backdrop-blur rounded-full p-1">
+          <nav className="hidden sm:flex items-center gap-1 bg-white/10 backdrop-blur rounded-full p-1">
             {TABS.map((tab) => (
               <button
                 key={tab.key}
@@ -313,9 +316,57 @@ export default function Home() {
               </button>
             )}
           </nav>
+
+          <div className="flex items-center gap-2 sm:hidden">
+            {view !== "form" && (
+              <button
+                type="button"
+                onClick={startApplication}
+                className="px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-white hover:brightness-110 transition-all"
+              >
+                Apply Now
+              </button>
+            )}
+            {view === "landing" && (
+              <button
+                type="button"
+                onClick={() => setMobileOpen((o) => !o)}
+                aria-expanded={mobileOpen}
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur border border-white/15 text-white hover:bg-white/20 transition-colors"
+              >
+                <span className="text-lg leading-none">
+                  {mobileOpen ? "✕" : "☰"}
+                </span>
+              </button>
+            )}
+          </div>
         </header>
 
-        <main className="max-w-5xl mx-auto w-full flex-1 flex items-center justify-center">
+        {mobileOpen && view === "landing" && (
+          <div className="sm:hidden max-w-5xl mx-auto w-full mb-6 rounded-2xl bg-slate-900/90 backdrop-blur-md border border-white/15 p-2 shadow-xl shadow-black/40 animate-fade-in">
+            {TABS.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => {
+                  setActiveTab(tab.key);
+                  setView("landing");
+                  setMobileOpen(false);
+                }}
+                className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
+                  view === "landing" && activeTab === tab.key
+                    ? "bg-amber-400 text-slate-900"
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <main className="max-w-5xl mx-auto w-full flex-1 flex items-center justify-center py-12 md:py-24">
           {view === "landing" && (
             <div key={activeTab} className="animate-fade-in w-full">
               {activeTab === "home" && (
@@ -323,27 +374,27 @@ export default function Home() {
                   <p className="text-amber-300 font-semibold tracking-[0.25em] uppercase text-xs sm:text-sm mb-3">
                     Welcome to
                   </p>
-                  <h1 className="text-4xl sm:text-6xl font-extrabold leading-tight bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]">
+                  <h1 className="text-2xl sm:text-4xl md:text-6xl font-extrabold leading-tight bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]">
                     Ceejay Multimedia
                     <span className="block">Audition</span>
                   </h1>
-                  <p className="text-white/85 mt-5 text-base sm:text-lg">
+                  <p className="text-white/85 mt-5 text-sm sm:text-lg">
                     ⭐ The Next Gospel Star ⭐
                     <br />
                     Show the world your amazing talent.
                   </p>
-                  <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <div className="mt-7 sm:mt-9 flex flex-col sm:flex-row items-center justify-center gap-3">
                     <button
                       type="button"
                       onClick={startApplication}
-                      className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-white font-bold text-base shadow-xl shadow-orange-500/30 hover:brightness-110 hover:scale-105 transition-all"
+                      className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-white font-bold text-sm sm:text-base shadow-xl shadow-orange-500/30 hover:brightness-110 hover:scale-105 transition-all"
                     >
                       Start Your Application
                     </button>
                     <button
                       type="button"
                       onClick={() => setActiveTab("how")}
-                      className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/10 border border-white/20 text-white font-semibold text-base backdrop-blur hover:bg-white/20 transition-colors"
+                      className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-white/10 border border-white/20 text-white font-semibold text-sm sm:text-base backdrop-blur hover:bg-white/20 transition-colors"
                     >
                       How It Works
                     </button>
