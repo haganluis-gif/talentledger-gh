@@ -744,7 +744,7 @@ export default function Home() {
                               </option>
                             ))}
                           </select>
-                          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-amber-400 text-xs">
+                          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-amber-400 text-lg">
                             ▾
                           </span>
                         </div>
@@ -775,7 +775,7 @@ export default function Home() {
                               </option>
                             ))}
                           </select>
-                          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-amber-400 text-xs">
+                          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-amber-400 text-lg">
                             ▾
                           </span>
                         </div>
