@@ -32,6 +32,42 @@ const AKWAABA_MEDIA = [
   },
 ];
 
+const GHANA_REGIONS = [
+  "Greater Accra",
+  "Ashanti",
+  "Western",
+  "Western North",
+  "Central",
+  "Eastern",
+  "Volta",
+  "Northern",
+  "Savannah",
+  "North East",
+  "Upper East",
+  "Upper West",
+  "Bono",
+  "Bono East",
+  "Ahafo",
+  "Oti",
+];
+
+const GHANA_LANGUAGES = [
+  "English",
+  "Twi (Akan)",
+  "Fante",
+  "Ga",
+  "Ewe",
+  "Dagbani",
+  "Dagaare",
+  "Nzema",
+  "Hausa",
+  "Gonja",
+  "Kasem",
+  "Buli",
+  "Kusaal",
+  "Sisaala",
+];
+
 export default function Home() {
   const router = useRouter();
   const [view, setView] = useState("landing"); // landing | form | success
@@ -687,28 +723,62 @@ export default function Home() {
                         <label className="block text-sm font-medium text-slate-100 mb-1">
                           Region
                         </label>
-                        <input
-                          type="text"
-                          name="region"
-                          value={form.region}
-                          onChange={handleChange}
-                          placeholder="e.g. Greater Accra"
-                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
-                        />
+                        <div className="relative">
+                          <select
+                            name="region"
+                            value={form.region}
+                            onChange={handleChange}
+                            aria-label="Region"
+                            className="w-full px-3 py-2.5 sm:px-4 sm:py-3 pr-10 bg-slate-800/60 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base appearance-none"
+                          >
+                            <option value="" disabled className="bg-slate-800 text-white">
+                              Select your region
+                            </option>
+                            {GHANA_REGIONS.map((region) => (
+                              <option
+                                key={region}
+                                value={region}
+                                className="bg-slate-800 text-white"
+                              >
+                                {region}
+                              </option>
+                            ))}
+                          </select>
+                          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-amber-400 text-xs">
+                            ▾
+                          </span>
+                        </div>
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-slate-100 mb-1">
                           Languages Spoken
                         </label>
-                        <input
-                          type="text"
-                          name="languages"
-                          value={form.languages}
-                          onChange={handleChange}
-                          placeholder="e.g. English, Twi"
-                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
-                        />
+                        <div className="relative">
+                          <select
+                            name="languages"
+                            value={form.languages}
+                            onChange={handleChange}
+                            aria-label="Languages Spoken"
+                            className="w-full px-3 py-2.5 sm:px-4 sm:py-3 pr-10 bg-slate-800/60 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base appearance-none"
+                          >
+                            <option value="" disabled className="bg-slate-800 text-white">
+                              Select a language
+                            </option>
+                            {GHANA_LANGUAGES.map((lang) => (
+                              <option
+                                key={lang}
+                                value={lang}
+                                className="bg-slate-800 text-white"
+                              >
+                                {lang}
+                              </option>
+                            ))}
+                          </select>
+                          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-amber-400 text-xs">
+                            ▾
+                          </span>
+                        </div>
                       </div>
 
                       <div>
