@@ -592,9 +592,9 @@ export default function Home() {
                 ← Back to Home
               </button>
 
-              <div className="rounded-2xl p-4 sm:p-8 bg-white/10 backdrop-blur-md border border-white/15">
+              <div className="rounded-2xl p-4 sm:p-8 bg-slate-900/85 backdrop-blur-lg border border-white/15">
                 <div className="text-center mb-4 sm:mb-5">
-                  <h1 className="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-transparent">
+                  <h1 className="text-2xl sm:text-4xl font-extrabold text-amber-400">
                     {program === "akwaaba" ? "👑 Miss Akwaaba 👑" : "⭐ The Next Gospel Star ⭐"}
                   </h1>
                   <p className="text-amber-200/80 mt-1 sm:mt-2">
@@ -638,7 +638,7 @@ export default function Home() {
 
                 <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-5">
                   <div>
-                    <label className="block text-sm font-medium text-white/90 mb-1">
+                    <label className="block text-sm font-medium text-slate-100 mb-1">
                       Full Name
                     </label>
                     <input
@@ -647,13 +647,13 @@ export default function Home() {
                       value={form.fullName}
                       onChange={handleChange}
                       placeholder="Enter your full name"
-                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
+                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                     />
                   </div>
 
                   {program === "ngs" ? (
                     <div>
-                      <label className="block text-sm font-medium text-white/90 mb-1">
+                      <label className="block text-sm font-medium text-slate-100 mb-1">
                         Location
                       </label>
                       <input
@@ -662,13 +662,13 @@ export default function Home() {
                         value={form.location}
                         onChange={handleChange}
                         placeholder="e.g. Accra, Ghana"
-                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
+                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                       />
                     </div>
                   ) : (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-white/90 mb-1">
+                        <label className="block text-sm font-medium text-slate-100 mb-1">
                           Age
                         </label>
                         <input
@@ -679,12 +679,12 @@ export default function Home() {
                           value={form.age}
                           onChange={handleChange}
                           placeholder="Enter your age"
-                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
+                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-white/90 mb-1">
+                        <label className="block text-sm font-medium text-slate-100 mb-1">
                           Region
                         </label>
                         <input
@@ -693,12 +693,12 @@ export default function Home() {
                           value={form.region}
                           onChange={handleChange}
                           placeholder="e.g. Greater Accra"
-                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
+                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-white/90 mb-1">
+                        <label className="block text-sm font-medium text-slate-100 mb-1">
                           Languages Spoken
                         </label>
                         <input
@@ -707,12 +707,12 @@ export default function Home() {
                           value={form.languages}
                           onChange={handleChange}
                           placeholder="e.g. English, Twi"
-                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
+                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-white/90 mb-1">
+                        <label className="block text-sm font-medium text-slate-100 mb-1">
                           Headshot Photo
                         </label>
                         <div
@@ -747,7 +747,7 @@ export default function Home() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-white/90 mb-1">
+                        <label className="block text-sm font-medium text-slate-100 mb-1">
                           Traditional Photo
                         </label>
                         <div
@@ -784,7 +784,7 @@ export default function Home() {
                   )}
 
                   <div>
-                    <label className="block text-sm font-medium text-white/90 mb-1">
+                    <label className="block text-sm font-medium text-slate-100 mb-1">
                       Phone Number
                     </label>
                     <input
@@ -793,13 +793,13 @@ export default function Home() {
                       value={form.phone}
                       onChange={handleChange}
                       placeholder="e.g. 024XXXXXXX"
-                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/10 border border-white/20 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
+                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                     />
                   </div>
 
                   {program === "ngs" ? (
                     <div>
-                      <label className="block text-sm font-medium text-white/90 mb-1">
+                      <label className="block text-sm font-medium text-slate-100 mb-1">
                         30-Second Audition Clip
                       </label>
                       <div
@@ -864,9 +864,9 @@ export default function Home() {
 
           {view === "success" && success && (
             <div className="animate-fade-in w-full max-w-lg">
-              <div className="rounded-3xl p-6 sm:p-10 bg-white/10 backdrop-blur-md border border-white/15 text-center">
+              <div className="rounded-3xl p-6 sm:p-10 bg-slate-900/85 backdrop-blur-lg border border-white/15 text-center">
                 <div className="text-6xl mb-4">🎉</div>
-                <h2 className="text-3xl font-extrabold bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-transparent">
+                <h2 className="text-3xl font-extrabold text-amber-400">
                   Thank You!
                 </h2>
                 <p className="text-white/85 mt-4 leading-relaxed">
