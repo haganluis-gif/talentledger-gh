@@ -21,6 +21,17 @@ const TABS = [
   { key: "about", label: "About" },
 ];
 
+const AKWAABA_MEDIA = [
+  {
+    src: "/backgrounds/bg-akwaaba.mp4",
+    poster: "/backgrounds/bg-akwaaba-poster.jpg",
+  },
+  {
+    src: "/backgrounds/bg-akwaaba-2.mp4",
+    poster: "/backgrounds/bg-akwaaba-2.jpg",
+  },
+];
+
 export default function Home() {
   const router = useRouter();
   const [view, setView] = useState("landing"); // landing | form | success
@@ -272,16 +283,8 @@ export default function Home() {
   return (
     <div className="relative isolate min-h-dvh w-full flex flex-col overflow-hidden">
       <VideoBackground
-        src={
-          program === "akwaaba"
-            ? "/backgrounds/bg-akwaaba.mp4"
-            : "/backgrounds/bg-main.mp4"
-        }
-        poster={
-          program === "akwaaba"
-            ? "/backgrounds/bg-akwaaba-poster.jpg"
-            : "/backgrounds/bg-poster.jpg"
-        }
+        key={program}
+        media={program === "akwaaba" ? AKWAABA_MEDIA : undefined}
       />
 
       <div className="relative flex-1 flex flex-col px-4 py-5 sm:py-8">
