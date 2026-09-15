@@ -271,7 +271,18 @@ export default function Home() {
 
   return (
     <div className="relative isolate min-h-dvh w-full flex flex-col overflow-hidden">
-      <VideoBackground />
+      <VideoBackground
+        src={
+          program === "akwaaba"
+            ? "/backgrounds/bg-akwaaba.mp4"
+            : "/backgrounds/bg-main.mp4"
+        }
+        poster={
+          program === "akwaaba"
+            ? "/backgrounds/bg-akwaaba-poster.jpg"
+            : "/backgrounds/bg-poster.jpg"
+        }
+      />
 
       <div className="relative flex-1 flex flex-col px-4 py-5 sm:py-8">
         <header className="max-w-5xl mx-auto w-full flex items-center justify-between mb-8 sm:mb-12">
