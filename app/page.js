@@ -578,18 +578,18 @@ export default function Home() {
                 ← Back to Home
               </button>
 
-              <div className="rounded-2xl p-4 sm:p-8 bg-slate-900/90 border border-amber-400/20 shadow-2xl shadow-black/60 backdrop-blur-md">
+              <div className="rounded-2xl p-4 sm:p-8 bg-white border border-amber-300/70 shadow-2xl shadow-black/40">
                 <div className="text-center mb-4 sm:mb-5">
-                  <h1 className="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(251,191,36,0.35)]">
+                  <h1 className="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-transparent">
                     {program === "akwaaba" ? "👑 Miss Akwaaba 👑" : "⭐ The Next Gospel Star ⭐"}
                   </h1>
-                  <p className="text-amber-200/80 mt-1 sm:mt-2">
+                  <p className="text-slate-500 mt-1 sm:mt-2">
                     Application Form
                   </p>
                 </div>
 
                 <div className="mb-4 sm:mb-6">
-                  <p className="text-sm font-medium text-amber-200 mb-2">
+                  <p className="text-sm font-medium text-slate-600 mb-2">
                     Which application are you submitting?
                   </p>
                   <div className="grid grid-cols-2 gap-2" role="group" aria-label="Choose application program">
@@ -600,8 +600,8 @@ export default function Home() {
                       aria-pressed={program === "ngs"}
                       className={`px-3 py-3 rounded-xl border text-sm font-bold transition-all ${
                         program === "ngs"
-                          ? "bg-gradient-to-r from-amber-400 to-orange-500 text-slate-900 border-transparent shadow-lg shadow-orange-500/25"
-                          : "bg-white/5 border-white/15 text-white/70 hover:bg-white/10"
+                          ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white border-transparent shadow-lg shadow-orange-500/25"
+                          : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
                       }`}
                     >
                       ⭐ Gospel Star
@@ -613,8 +613,8 @@ export default function Home() {
                       aria-pressed={program === "akwaaba"}
                       className={`px-3 py-3 rounded-xl border text-sm font-bold transition-all ${
                         program === "akwaaba"
-                          ? "bg-gradient-to-r from-amber-400 to-orange-500 text-slate-900 border-transparent shadow-lg shadow-orange-500/25"
-                          : "bg-white/5 border-white/15 text-white/70 hover:bg-white/10"
+                          ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white border-transparent shadow-lg shadow-orange-500/25"
+                          : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
                       }`}
                     >
                       👑 Miss Akwaaba
@@ -624,7 +624,7 @@ export default function Home() {
 
                 <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-5">
                   <div>
-                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
                       Full Name
                     </label>
                     <input
@@ -633,13 +633,13 @@ export default function Home() {
                       value={form.fullName}
                       onChange={handleChange}
                       placeholder="Enter your full name"
-                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/80 border border-slate-700 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base"
+                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white border border-slate-300 text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                     />
                   </div>
 
                   {program === "ngs" ? (
                     <div>
-                      <label className="block text-sm font-medium text-slate-200 mb-1">
+                      <label className="block text-sm font-medium text-slate-700 mb-1">
                         Location
                       </label>
                       <input
@@ -648,13 +648,13 @@ export default function Home() {
                         value={form.location}
                         onChange={handleChange}
                         placeholder="e.g. Accra, Ghana"
-                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/80 border border-slate-700 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base"
+                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white border border-slate-300 text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                       />
                     </div>
                   ) : (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-slate-200 mb-1">
+                        <label className="block text-sm font-medium text-slate-700 mb-1">
                           Age
                         </label>
                         <input
@@ -665,12 +665,12 @@ export default function Home() {
                           value={form.age}
                           onChange={handleChange}
                           placeholder="Enter your age"
-                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/80 border border-slate-700 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base"
+                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white border border-slate-300 text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-200 mb-1">
+                        <label className="block text-sm font-medium text-slate-700 mb-1">
                           Region
                         </label>
                         <input
@@ -679,12 +679,12 @@ export default function Home() {
                           value={form.region}
                           onChange={handleChange}
                           placeholder="e.g. Greater Accra"
-                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/80 border border-slate-700 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base"
+                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white border border-slate-300 text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-200 mb-1">
+                        <label className="block text-sm font-medium text-slate-700 mb-1">
                           Languages Spoken
                         </label>
                         <input
@@ -693,38 +693,38 @@ export default function Home() {
                           value={form.languages}
                           onChange={handleChange}
                           placeholder="e.g. English, Twi"
-                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/80 border border-slate-700 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base"
+                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white border border-slate-300 text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-200 mb-1">
+                        <label className="block text-sm font-medium text-slate-700 mb-1">
                           Headshot Photo
                         </label>
                         <div
                           {...headshotDropzone.getRootProps()}
-                          className={`border-2 border-dashed rounded-lg p-4 sm:p-5 text-center cursor-pointer transition-colors ${
+                          className={`border-2 border-dashed rounded-lg p-4 sm:p-5 text-center cursor-pointer transition-colors bg-white ${
                             headshotDropzone.isDragActive
-                              ? "border-amber-400 bg-amber-400/10"
-                              : "border-amber-300/30 hover:border-amber-400"
+                              ? "border-amber-500 bg-amber-50"
+                              : "border-slate-300 hover:border-amber-500"
                           }`}
                         >
                           <input {...headshotDropzone.getInputProps()} />
                           {headshot ? (
                             <div>
-                              <p className="text-amber-300 font-medium">
+                              <p className="text-amber-600 font-medium">
                                 {headshot.name}
                               </p>
-                              <p className="text-sm text-slate-300 mt-1">
+                              <p className="text-sm text-slate-500 mt-1">
                                 {(headshot.size / (1024 * 1024)).toFixed(2)} MB
                               </p>
                             </div>
                           ) : (
                             <div>
-                              <p className="text-amber-100/90">
+                              <p className="text-slate-500">
                                 Drag & drop a clear face photo, or tap to browse
                               </p>
-                              <p className="text-sm text-slate-300 mt-1">
+                              <p className="text-sm text-slate-500 mt-1">
                                 JPEG, PNG, WebP (max 1.5MB)
                               </p>
                             </div>
@@ -733,33 +733,33 @@ export default function Home() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-200 mb-1">
+                        <label className="block text-sm font-medium text-slate-700 mb-1">
                           Traditional Photo
                         </label>
                         <div
                           {...traditionalDropzone.getRootProps()}
-                          className={`border-2 border-dashed rounded-lg p-4 sm:p-5 text-center cursor-pointer transition-colors ${
+                          className={`border-2 border-dashed rounded-lg p-4 sm:p-5 text-center cursor-pointer transition-colors bg-white ${
                             traditionalDropzone.isDragActive
-                              ? "border-amber-400 bg-amber-400/10"
-                              : "border-amber-300/30 hover:border-amber-400"
+                              ? "border-amber-500 bg-amber-50"
+                              : "border-slate-300 hover:border-amber-500"
                           }`}
                         >
                           <input {...traditionalDropzone.getInputProps()} />
                           {traditional ? (
                             <div>
-                              <p className="text-amber-300 font-medium">
+                              <p className="text-amber-600 font-medium">
                                 {traditional.name}
                               </p>
-                              <p className="text-sm text-slate-300 mt-1">
+                              <p className="text-sm text-slate-500 mt-1">
                                 {(traditional.size / (1024 * 1024)).toFixed(2)} MB
                               </p>
                             </div>
                           ) : (
                             <div>
-                              <p className="text-amber-100/90">
+                              <p className="text-slate-500">
                                 Drag & drop your photo in traditional attire, or tap to browse
                               </p>
-                              <p className="text-sm text-slate-300 mt-1">
+                              <p className="text-sm text-slate-500 mt-1">
                                 JPEG, PNG, WebP (max 1.5MB)
                               </p>
                             </div>
@@ -770,7 +770,7 @@ export default function Home() {
                   )}
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-200 mb-1">
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
                       Phone Number
                     </label>
                     <input
@@ -779,39 +779,39 @@ export default function Home() {
                       value={form.phone}
                       onChange={handleChange}
                       placeholder="e.g. 024XXXXXXX"
-                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/80 border border-slate-700 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400/60 outline-none text-sm sm:text-base"
+                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white border border-slate-300 text-slate-900 placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                     />
                   </div>
 
                   {program === "ngs" ? (
                     <div>
-                      <label className="block text-sm font-medium text-slate-200 mb-1">
+                      <label className="block text-sm font-medium text-slate-700 mb-1">
                         30-Second Audition Clip
                       </label>
                       <div
                         {...clipDropzone.getRootProps()}
-                        className={`border-2 border-dashed rounded-lg p-4 sm:p-6 text-center cursor-pointer transition-colors ${
+                        className={`border-2 border-dashed rounded-lg p-4 sm:p-6 text-center cursor-pointer transition-colors bg-white ${
                           clipDropzone.isDragActive
-                            ? "border-amber-400 bg-amber-400/10"
-                            : "border-amber-300/30 hover:border-amber-400"
+                            ? "border-amber-500 bg-amber-50"
+                            : "border-slate-300 hover:border-amber-500"
                         }`}
                       >
                         <input {...clipDropzone.getInputProps()} />
                         {file ? (
                           <div>
-                            <p className="text-amber-300 font-medium">
+                            <p className="text-amber-600 font-medium">
                               {file.name}
                             </p>
-                            <p className="text-sm text-slate-300 mt-1">
+                            <p className="text-sm text-slate-500 mt-1">
                               {(file.size / (1024 * 1024)).toFixed(2)} MB
                             </p>
                           </div>
                         ) : (
                           <div>
-                            <p className="text-amber-100/90">
+                            <p className="text-slate-500">
                               Drag & drop your clip here, or tap to browse
                             </p>
-                            <p className="text-sm text-slate-300 mt-1">
+                            <p className="text-sm text-slate-500 mt-1">
                               MP4, MOV, AVI, WebM, MP3, WAV (max 4MB)
                             </p>
                           </div>
@@ -829,9 +829,9 @@ export default function Home() {
                   </button>
 
                   {errors.length > 0 && (
-                    <div className="rounded-lg bg-red-950/70 border border-red-500/40 p-3 mt-2">
+                    <div className="rounded-lg bg-red-50 border border-red-400/60 p-3 mt-2">
                       {errors.map((error, i) => (
-                        <p key={i} className="text-sm text-red-200">
+                        <p key={i} className="text-sm text-red-600">
                           {error}
                         </p>
                       ))}
@@ -839,7 +839,7 @@ export default function Home() {
                   )}
 
                   {message && (
-                    <p className="text-center text-sm text-red-300 mt-2">
+                    <p className="text-center text-sm text-red-600 mt-2">
                       {message}
                     </p>
                   )}
@@ -850,18 +850,18 @@ export default function Home() {
 
           {view === "success" && success && (
             <div className="animate-fade-in w-full max-w-lg">
-              <div className="rounded-3xl p-6 sm:p-10 bg-slate-900/90 border border-amber-400/20 shadow-2xl shadow-black/60 backdrop-blur-md text-center">
+              <div className="rounded-3xl p-6 sm:p-10 bg-white border border-amber-300/70 shadow-2xl shadow-black/40 text-center">
                 <div className="text-6xl mb-4">🎉</div>
-                <h2 className="text-3xl font-extrabold bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 bg-clip-text text-transparent">
+                <h2 className="text-3xl font-extrabold bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-transparent">
                   Thank You!
                 </h2>
-                <p className="text-white/85 mt-4 leading-relaxed">
+                <p className="text-slate-700 mt-4 leading-relaxed">
                   Thanks for applying,{" "}
-                  <span className="text-amber-300 font-bold">
+                  <span className="text-amber-600 font-bold">
                     {success.contestant.full_name}
                   </span>
                   ! {"We're"} so excited to have you join the{" "}
-                  <span className="text-amber-300 font-semibold">
+                  <span className="text-amber-600 font-semibold">
                     {success.contestant.program === "akwaaba"
                       ? "Miss Akwaaba"
                       : "Ceejay Multimedia Audition"}
@@ -871,13 +871,13 @@ export default function Home() {
                     ? "Your photos have been received safely."
                     : "Your audition clip has been received safely."}
                 </p>
-                <p className="text-white/70 mt-3 leading-relaxed">
+                <p className="text-slate-600 mt-3 leading-relaxed">
                   We will be happy to see you at the venue. 🌟
                 </p>
 
-                <div className="mt-6 rounded-2xl bg-slate-800/80 border border-amber-400/20 p-4">
-                  <p className="text-sm text-amber-200">Your Contestant ID</p>
-                  <p className="text-2xl font-mono font-bold text-white mt-1">
+                <div className="mt-6 rounded-2xl bg-amber-50 border border-amber-200 p-4">
+                  <p className="text-sm text-slate-500">Your Contestant ID</p>
+                  <p className="text-2xl font-mono font-bold text-slate-900 mt-1">
                     {success.contestant.contestant_id}
                   </p>
                 </div>
@@ -897,14 +897,14 @@ export default function Home() {
                         `/pass?id=${success.contestant.contestant_id}`
                       )
                     }
-                    className="w-full px-8 py-3.5 rounded-full bg-white/10 border border-white/20 text-white font-semibold text-base backdrop-blur hover:bg-white/20 transition-colors"
+                    className="w-full px-8 py-3.5 rounded-full bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-base hover:bg-slate-100 transition-colors"
                   >
                     View My Digital Pass
                   </button>
                   <button
                     type="button"
                     onClick={goHome}
-                    className="w-full px-8 py-3.5 rounded-full bg-white/10 border border-white/20 text-white font-semibold text-base backdrop-blur hover:bg-white/20 transition-colors"
+                    className="w-full px-8 py-3.5 rounded-full bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-base hover:bg-slate-100 transition-colors"
                   >
                     Back to Home
                   </button>
