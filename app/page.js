@@ -628,9 +628,9 @@ export default function Home() {
                 ← Back to Home
               </button>
 
-              <div className="rounded-2xl p-4 sm:p-8 bg-slate-900/85 backdrop-blur-lg border border-white/15">
+              <div className="rounded-2xl p-4 sm:p-8 bg-white/10 backdrop-blur-lg border border-white/20">
                 <div className="text-center mb-4 sm:mb-5">
-                  <h1 className="text-2xl sm:text-4xl font-extrabold text-amber-400">
+                  <h1 className="text-2xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500 drop-shadow-[0_0_12px_rgba(251,146,60,0.45)]">
                     {program === "akwaaba" ? "👑 Miss Akwaaba 👑" : "⭐ The Next Gospel Star ⭐"}
                   </h1>
                   <p className="text-amber-200/80 mt-1 sm:mt-2">
@@ -650,8 +650,8 @@ export default function Home() {
                       aria-pressed={program === "ngs"}
                       className={`px-3 py-3 rounded-xl border text-sm font-bold transition-all ${
                         program === "ngs"
-                          ? "bg-gradient-to-r from-amber-400 to-orange-500 text-white border-transparent shadow-lg shadow-orange-500/25"
-                          : "bg-white/5 border-white/15 text-white/70 hover:bg-white/10"
+                          ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white border-transparent shadow-lg shadow-orange-500/25"
+                          : "bg-white/10 border-white/20 text-white hover:bg-white/15"
                       }`}
                     >
                       ⭐ Gospel Star
@@ -663,8 +663,8 @@ export default function Home() {
                       aria-pressed={program === "akwaaba"}
                       className={`px-3 py-3 rounded-xl border text-sm font-bold transition-all ${
                         program === "akwaaba"
-                          ? "bg-gradient-to-r from-amber-400 to-orange-500 text-white border-transparent shadow-lg shadow-orange-500/25"
-                          : "bg-white/5 border-white/15 text-white/70 hover:bg-white/10"
+                          ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white border-transparent shadow-lg shadow-orange-500/25"
+                          : "bg-white/10 border-white/20 text-white hover:bg-white/15"
                       }`}
                     >
                       👑 Miss Akwaaba
@@ -674,7 +674,7 @@ export default function Home() {
 
                 <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-5">
                   <div>
-                    <label className="block text-sm font-medium text-slate-100 mb-1">
+                    <label className="block text-sm font-medium text-white mb-1">
                       Full Name
                     </label>
                     <input
@@ -683,13 +683,13 @@ export default function Home() {
                       value={form.fullName}
                       onChange={handleChange}
                       placeholder="Enter your full name"
-                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
+                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/5 border border-white/30 text-white placeholder-slate-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                     />
                   </div>
 
                   {program === "ngs" ? (
                     <div>
-                      <label className="block text-sm font-medium text-slate-100 mb-1">
+                      <label className="block text-sm font-medium text-white mb-1">
                         Location
                       </label>
                       <input
@@ -698,13 +698,13 @@ export default function Home() {
                         value={form.location}
                         onChange={handleChange}
                         placeholder="e.g. Accra, Ghana"
-                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
+                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/5 border border-white/30 text-white placeholder-slate-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                       />
                     </div>
                   ) : (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-slate-100 mb-1">
+                        <label className="block text-sm font-medium text-white mb-1">
                           Age
                         </label>
                         <input
@@ -715,12 +715,12 @@ export default function Home() {
                           value={form.age}
                           onChange={handleChange}
                           placeholder="Enter your age"
-                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
+                          className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/5 border border-white/30 text-white placeholder-slate-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-100 mb-1">
+                        <label className="block text-sm font-medium text-white mb-1">
                           Region
                         </label>
                         <div className="relative">
@@ -729,7 +729,7 @@ export default function Home() {
                             value={form.region}
                             onChange={handleChange}
                             aria-label="Region"
-                            className="w-full px-3 py-2.5 sm:px-4 sm:py-3 pr-10 bg-slate-800/60 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base appearance-none"
+                            className="w-full px-3 py-2.5 sm:px-4 sm:py-3 pr-10 bg-white/5 border border-white/30 text-white rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base appearance-none"
                           >
                             <option value="" disabled className="bg-slate-800 text-white">
                               Select your region
@@ -751,7 +751,7 @@ export default function Home() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-100 mb-1">
+                        <label className="block text-sm font-medium text-white mb-1">
                           Languages Spoken
                         </label>
                         <div className="relative">
@@ -760,7 +760,7 @@ export default function Home() {
                             value={form.languages}
                             onChange={handleChange}
                             aria-label="Languages Spoken"
-                            className="w-full px-3 py-2.5 sm:px-4 sm:py-3 pr-10 bg-slate-800/60 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base appearance-none"
+                            className="w-full px-3 py-2.5 sm:px-4 sm:py-3 pr-10 bg-white/5 border border-white/30 text-white rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base appearance-none"
                           >
                             <option value="" disabled className="bg-slate-800 text-white">
                               Select a language
@@ -782,7 +782,7 @@ export default function Home() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-100 mb-1">
+                        <label className="block text-sm font-medium text-white mb-1">
                           Headshot Photo
                         </label>
                         <div
@@ -817,7 +817,7 @@ export default function Home() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-100 mb-1">
+                        <label className="block text-sm font-medium text-white mb-1">
                           Traditional Photo
                         </label>
                         <div
@@ -854,7 +854,7 @@ export default function Home() {
                   )}
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-100 mb-1">
+                    <label className="block text-sm font-medium text-white mb-1">
                       Phone Number
                     </label>
                     <input
@@ -863,13 +863,13 @@ export default function Home() {
                       value={form.phone}
                       onChange={handleChange}
                       placeholder="e.g. 024XXXXXXX"
-                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-800/60 border border-slate-600 text-white placeholder-slate-400 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
+                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-white/5 border border-white/30 text-white placeholder-slate-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-500 outline-none text-sm sm:text-base"
                     />
                   </div>
 
                   {program === "ngs" ? (
                     <div>
-                      <label className="block text-sm font-medium text-slate-100 mb-1">
+                      <label className="block text-sm font-medium text-white mb-1">
                         30-Second Audition Clip
                       </label>
                       <div
@@ -934,9 +934,9 @@ export default function Home() {
 
           {view === "success" && success && (
             <div className="animate-fade-in w-full max-w-lg">
-              <div className="rounded-3xl p-6 sm:p-10 bg-slate-900/85 backdrop-blur-lg border border-white/15 text-center">
+              <div className="rounded-3xl p-6 sm:p-10 bg-white/10 backdrop-blur-lg border border-white/20 text-center">
                 <div className="text-6xl mb-4">🎉</div>
-                <h2 className="text-3xl font-extrabold text-amber-400">
+                <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500 drop-shadow-[0_0_12px_rgba(251,146,60,0.45)]">
                   Thank You!
                 </h2>
                 <p className="text-white/85 mt-4 leading-relaxed">
